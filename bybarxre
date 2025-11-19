@@ -1,228 +1,244 @@
 
 
--- dancik project teleport script for Xeno with key verification and Discord link
--- Key = "dan22!*"
--- Menu size 600x600, draggable, with + (open) and - (close) buttons
+-- Скрипт Roblox с верификацией ключа, меню телепортов и кнопкой дискорда
+-- Ключ: dan22ncik
+-- Дискорд: https://discord.gg/SFc8fD2EeV
 
 local Players = game:GetService("Players")
+local UserInputService = game:GetService("UserInputService")
+local GuiService = game:GetService("GuiService")
 local player = Players.LocalPlayer
 
-local ACCESS_KEY = "dan22!*"
-local DISCORD_LINK = "https://discord.gg/SFc8fD2EeV"
+local discordLink = "https://discord.gg/SFc8fD2EeV"
+local correctKey = "dan22ncik"
 
-local teleportLocations = {
-    {Name = "Gun in Garage", CFrame = CFrame.new(-1088.13196, 17.7025814, -219.947083, -0.0284349229, -2.35436198e-10, -0.999595642, -6.8746381e-08, 1, 1.72005732e-09, 0.999595642, 6.87674913e-08, -0.0284349229)},
-    {Name = "Healing Shop", CFrame = CFrame.new(-898.3302, 17.8664627, -33.2507324, 0.950778663, -8.23291444e-08, 0.309870899, 7.36701793e-08, 1, 3.96458937e-08, -0.309870899, -1.48662256e-08, 0.950778663)},
-    {Name = "Air Rifle", CFrame = CFrame.new(-875.696472, 17.6830349, -264.102356, 0.297422886, 2.11997886e-08, -0.954745829, 2.39498323e-08, 1, 2.96655056e-08, 0.954745829, -3.16892041e-08, 0.297422886)},
-    {Name = "Karate", CFrame = CFrame.new(-906.49823, 15.2971087, -209.315689, -0.526114225, 0.0755594969, -0.847050726, -0.830295324, 0.16973567, 0.530848086, 0.183885396, 0.982588828, -0.0265638828)},
-    {Name = "Buy Pickaxe", CFrame = CFrame.new(-1122.67078, 17.4602184, 730.827942, 0.584799767, -2.13460893e-08, 0.811177671, 3.15328528e-08, 1, 3.58205665e-09, -0.811177671, 2.34839597e-08, 0.584799767)},
-    {Name = "Mine 1", CFrame = CFrame.new(1420.07361, 26.8799133, 772.233093, 0.882647812, 0.467782944, 0.0459556468, 0.0900144875, -0.0722613633, -0.993315518, -0.461335242, 0.880884469, -0.105888583)},
-    {Name = "Mine 2", CFrame = CFrame.new(1419.5354, 19.9678917, 976.611633, -0.996763349, 0.00762345456, 0.0800294653, 0.0788819417, -0.0992784724, 0.99192816, 0.0155071225, 0.995030463, 0.0983557925)},
-    {Name = "Sheriff 1", CFrame = CFrame.new(16.0813103, 17.8066101, -26.2852802, -0.999557376, 6.46549196e-08, -0.0297494177, 6.29793959e-08, 1, 5.72583545e-08, 0.0297494177, 5.53594113e-08, -0.999557376)},
-    {Name = "Sheriff 2", CFrame = CFrame.new(72.8017731, 17.8066101, -3.64430571, 0.0408398211, 4.27074376e-09, -0.999165714, 7.19667481e-09, 1, 4.56846605e-09, 0.999165714, -7.37724593e-09, 0.0408398211)},
-    {Name = "Rob 1", CFrame = CFrame.new(39.8834114, 18.2831268, 150.621536, 0.895504713, 1.05210098e-07, -0.445052028, -1.24812132e-07, 1, -1.47392925e-08, 0.445052028, 6.87469992e-08, 0.895504713)},
-    {Name = "Rob 2", CFrame = CFrame.new(226.888214, 17.8830338, 159.62352, 0.977398872, 1.56689755e-08, 0.211403653, -3.31985746e-08, 1, 7.93707784e-08, -0.211403653, -8.45952073e-08, 0.977398872)},
-    {Name = "Card Locked Place 1", CFrame = CFrame.new(489.367249, 18.1330242, 297.138519, 0.999848247, 7.80197595e-08, -0.0174199734, -7.84431435e-08, 1, -2.36212152e-08, 0.0174199734, 2.4984109e-08, 0.999848247)},
-    {Name = "Card Locked Place 2", CFrame = CFrame.new(424.332458, 18.3830242, 330.971802, -1, -3.38178658e-08, -2.62949634e-05, -3.38193047e-08, 1, 5.48186883e-08, 2.62949634e-05, 5.48195764e-08, -1)},
-    {Name = "Rob 3", CFrame = CFrame.new(120.286835, 18.8848476, 295.406219, 0.9654513, 8.0819845e-08, -0.26058349, -7.34641858e-08, 1, 3.79676699e-08, 0.26058349, -1.75123809e-08, 0.9654513)},
-    {Name = "Beer Fridge", CFrame = CFrame.new(-559.703735, 18.6959057, 93.3894196, -0.997457027, -3.90046999e-08, -0.0712705925, -3.5903934e-08, 1, -4.47880311e-08, 0.0712705925, -4.21152428e-08, -0.997457027)},
-    {Name = "Rob 4", CFrame = CFrame.new(-580.98822, 17.6830349, -264.027283, -0.869084835, -3.7267176e-09, -0.49466309, -8.28197866e-09, 1, 7.01694702e-09, 0.49466309, 1.01951114e-08, -0.869084835)},
-    {Name = &quot;Sell Items", CFrame = CFrame.new(-549.513306, 17.6830349, -266.557831, 0.96173507, 5.54035964e-08, -0.273981124, -5.07253368e-08, 1, 2.41595561e-08, 0.273981124, -9.33730782e-09, 0.96173507)},
-    {Name = "Bank", CFrame = CFrame.new(35.6656342, 18.1000214, -203.229416, 0.999961972, -1.3829375e-08, -0.00871889107, 1.38468188e-08, 1, 1.94025063e-09, 0.00871889107, -2.06090567e-09, 0.999961972)},
-    {Name = "Rob 5", CFrame = CFrame.new(-834.76593, 17.6830349, -263.746948, -0.903253555, -5.10189615e-08, 0.429107279, 4.16429069e-09, 1, 1.27661252e-07, -0.429107279, 1.17097407e-07, -0.903253555)},
-    {Name = "Lockpicks and Lighter", CFrame = CFrame.new(-739.585876, 18.0015659, -53.351593, 0.00863256119, 1.86514839e-08, 0.999962747, -1.19718511e-08, 1, -1.85488283e-08, -0.999962747, -1.18112808e-08, 0.00863256119)},
-}
+-- Функция создания перетаскивания
 
--- UI
-
-local PlayerGui = player:WaitForChild("PlayerGui")
-
-local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "dancikProject"
-ScreenGui.Parent = PlayerGui
-
--- Key verification frame
-
-local keyFrame = Instance.new("Frame")
-keyFrame.Size = UDim2.new(0, 320, 0, 140)
-keyFrame.Position = UDim2.new(0.5, -160, 0.5, -70)
-keyFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-keyFrame.BorderSizePixel = 0
-keyFrame.Parent = ScreenGui
-
-local keyTitle = Instance.new("TextLabel")
-keyTitle.Size = UDim2.new(1, 0, 0, 30)
-keyTitle.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-keyTitle.TextColor3 = Color3.new(1,1,1)
-keyTitle.Text = "dancik project - Access Key"
-keyTitle.Font = Enum.Font.SourceSansBold
-keyTitle.TextSize = 24
-keyTitle.BorderSizePixel = 0
-keyTitle.Parent = keyFrame
-
-local keyBox = Instance.new("TextBox")
-keyBox.Size = UDim2.new(1, -20, 0, 40)
-keyBox.Position = UDim2.new(0, 10, 0, 50)
-keyBox.ClearTextOnFocus = false
-keyBox.PlaceholderText = "Enter key..."
-keyBox.TextColor3 = Color3.new(1,1,1)
-keyBox.BackgroundColor3 = Color3.fromRGB(40,40,40)
-keyBox.Font = Enum.Font.SourceSans
-keyBox.TextSize = 20
-keyBox.BorderSizePixel = 0
-keyBox.Parent = keyFrame
-
-local submitButton = Instance.new("TextButton")
-submitButton.Size = UDim2.new(1, -20, 0, 40)
-submitButton.Position = UDim2.new(0, 10, 0, 100)
-submitButton.BackgroundColor3 = Color3.fromRGB(70,130,180)
-submitButton.TextColor3 = Color3.new(1,1,1)
-submitButton.Font = Enum.Font.SourceSansBold
-submitButton.TextSize = 22
-submitButton.Text = "Submit"
-submitButton.BorderSizePixel = 0
-submitButton.Parent = keyFrame
-
-local errorLabel = Instance.new("TextLabel")
-errorLabel.Size = UDim2.new(1, 0, 0, 20)
-errorLabel.Position = UDim2.new(0, 0, 1, -20)
-errorLabel.BackgroundTransparency = 1
-errorLabel.TextColor3 = Color3.fromRGB(255,80,80)
-errorLabel.Font = Enum.Font.SourceSansItalic
-errorLabel.TextSize = 16
-errorLabel.Text = ""
-errorLabel.Parent = keyFrame
-
-local discordLabel = Instance.new("TextLabel")
-discordLabel.Size = UDim2.new(1, -20, 0, 20)
-discordLabel.Position = UDim2.new(0, 10, 0, 30)
-discordLabel.BackgroundTransparency = 1
-discordLabel.TextColor3 = Color3.fromRGB(100, 150, 255)
-discordLabel.Font = Enum.Font.SourceSans
-discordLabel.TextSize = 18
-discordLabel.Text = "Get key in Discord: "..DISCORD_LINK
-discordLabel.Parent = keyFrame
-
-discordLabel.MouseEnter:Connect(function()
-    discordLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-end)
-discordLabel.MouseLeave:Connect(function()
-    discordLabel.TextColor3 = Color3.fromRGB(100, 150, 255)
-end)
-discordLabel.MouseButton1Click:Connect(function()
-    -- Will not work in Roblox client, but visually link is shown
-end)
-discordLabel.RichText = true
-discordLabel.TextTransparency = 0
-discordLabel.TextWrapped = true
-
--- Teleport menu UI, hidden at start
-
-local tpFrame = Instance.new("Frame")
-tpFrame.Size = UDim2.new(0, 600, 0, 600)
-tpFrame.Position = UDim2.new(0.5, -300, 0.5, -300)
-tpFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
-tpFrame.BorderSizePixel = 0
-tpFrame.Active = true
-tpFrame.Draggable = true
-tpFrame.Visible = false
-tpFrame.Parent = ScreenGui
-
-local tpTitle = Instance.new("TextLabel")
-tpTitle.Size = UDim2.new(1, 0, 0, 40)
-tpTitle.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-tpTitle.TextColor3 = Color3.new(1, 1, 1)
-tpTitle.Text = "dancik project - Teleport Menu"
-tpTitle.Font = Enum.Font.SourceSansBold
-tpTitle.TextSize = 28
-tpTitle.BorderSizePixel = 0
-tpTitle.Parent = tpFrame
-
-local buttonsContainer = Instance.new("ScrollingFrame")
-buttonsContainer.Size = UDim2.new(1, -20, 1, -60)
-buttonsContainer.Position = UDim2.new(0, 10, 0, 50)
-buttonsContainer.BackgroundTransparency = 1
-buttonsContainer.BorderSizePixel = 0
-buttonsContainer.ScrollBarThickness = 8
-buttonsContainer.Parent = tpFrame
-
-local UIListLayout = Instance.new("UIListLayout")
-UIListLayout.Padding = UDim.new(0, 5)
-UIListLayout.Parent = buttonsContainer
-
--- Create teleport buttons
-
-for _, loc in ipairs(teleportLocations) do
-    local btn = Instance.new("TextButton")
-    btn.Size = UDim2.new(1, 0, 0, 40)
-    btn.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
-    btn.TextColor3 = Color3.new(1, 1, 1)
-    btn.Text = loc.Name
-    btn.Font = Enum.Font.SourceSansSemibold
-    btn.TextSize = 20
-    btn.BorderSizePixel = 0
-    btn.Parent = buttonsContainer
-
-    btn.MouseButton1Click:Connect(function()
-        local char = player.Character
-        local hrp = char and char:FindFirstChild("HumanoidRootPart")
-        if hrp then
-            hrp.CFrame = loc.CFrame
+local function makeDraggable(frame)
+    local dragging, dragInput, dragStart, startPos
+    local function update(input)
+        local delta = input.Position - dragStart
+        frame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X,
+                                    startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+    end
+    frame.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            dragging = true
+            dragStart = input.Position
+            startPos = frame.Position
+            input.Changed:Connect(function()
+                if input.UserInputState == Enum.UserInputState.End then
+                    dragging = false
+                end
+            end)
+        end
+    end)
+    frame.InputChanged:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseMovement then
+            dragInput = input
+        end
+    end)
+    UserInputService.InputChanged:Connect(function(input)
+        if input == dragInput and dragging then
+            update(input)
         end
     end)
 end
 
--- Open (+) and Close (-) buttons
+-- Основное GUI
 
-local openButton = Instance.new("TextButton")
-openButton.Size = UDim2.new(0, 35, 0, 35)
-openButton.Position = UDim2.new(0, 15, 0, 15)
-openButton.Text = "+"
-openButton.Font = Enum.Font.SourceSansBold
-openButton.TextSize = 28
-openButton.BackgroundColor3 = Color3.fromRGB(40, 180, 40)
-openButton.TextColor3 = Color3.new(1, 1, 1)
-openButton.BorderSizePixel = 0
-openButton.Visible = false
-openButton.Parent = ScreenGui
+local screenGui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui"))
+screenGui.Name = "VerificationAndMenu"
 
-local closeButton = Instance.new("TextButton")
-closeButton.Size = UDim2.new(0, 35, 0, 35)
-closeButton.Position = UDim2.new(0, 60, 0, 15)
-closeButton.Text = "-"
-closeButton.Font = Enum.Font.SourceSansBold
-closeButton.TextSize = 28
-closeButton.BackgroundColor3 = Color3.fromRGB(180, 40, 40)
-closeButton.TextColor3 = Color3.new(1, 1, 1)
-closeButton.BorderSizePixel = 0
-closeButton.Visible = false
-closeButton.Parent = ScreenGui
+-- Окно ввода ключа
 
-openButton.MouseButton1Click:Connect(function()
-    tpFrame.Visible = true
-    openButton.Visible = false
-    closeButton.Visible = true
-end)
+local verificationWindow = Instance.new("Frame", screenGui)
+verificationWindow.Size = UDim2.new(0, 400, 0, 180)
+verificationWindow.Position = UDim2.new(0.3, 0, 0.4, 0)
+verificationWindow.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+verificationWindow.BorderSizePixel = 0
 
-closeButton.MouseButton1Click:Connect(function()
-    tpFrame.Visible = false
-    closeButton.Visible = false
-    openButton.Visible = true
-end)
+local titleLabel = Instance.new("TextLabel", verificationWindow)
+titleLabel.Size = UDim2.new(1, 0, 0, 50)
+titleLabel.Position = UDim2.new(0, 0, 0, 0)
+titleLabel.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+titleLabel.TextColor3 = Color3.new(1,1,1)
+titleLabel.Font = Enum.Font.SourceSansBold
+titleLabel.TextSize = 24
+titleLabel.Text = "Enter Key to Verify"
 
--- Key submit logic
+local inputBox = Instance.new("TextBox", verificationWindow)
+inputBox.Size = UDim2.new(0.7, -10, 0, 40)
+inputBox.Position = UDim2.new(0, 10, 0, 70)
+inputBox.ClearTextOnFocus = false
+inputBox.PlaceholderText = "Enter key here"
+inputBox.Text = ""
+inputBox.Font = Enum.Font.SourceSans
+inputBox.TextSize = 22
+inputBox.BackgroundColor3 = Color3.fromRGB(60,60,60)
+inputBox.TextColor3 = Color3.new(1,1,1)
 
-submitButton.MouseButton1Click:Connect(function()
-    if keyBox.Text == ACCESS_KEY then
-        keyFrame:Destroy()
-        openButton.Visible = true
-    else
-        errorLabel.Text = "Incorrect key! Please try again."
+local discordBtn = Instance.new("TextButton", verificationWindow)
+discordBtn.Size = UDim2.new(0.3, -10, 0, 40)
+discordBtn.Position = UDim2.new(0.7, 10, 0, 70)
+discordBtn.Text = "Get Discord"
+discordBtn.Font = Enum.Font.SourceSansBold
+discordBtn.TextSize = 20
+discordBtn.BackgroundColor3 = Color3.fromRGB(35, 155, 75)
+discordBtn.TextColor3 = Color3.new(1,1,1)
+
+local errorLabel = Instance.new("TextLabel", verificationWindow)
+errorLabel.Size = UDim2.new(1, 0, 0, 40)
+errorLabel.Position = UDim2.new(0, 0, 0, 120)
+errorLabel.BackgroundTransparency = 1
+errorLabel.TextColor3 = Color3.fromRGB(255, 100, 100)
+errorLabel.Font = Enum.Font.SourceSansBold
+errorLabel.TextSize = 18
+errorLabel.Text = ""
+
+-- Кнопка подтверждения
+
+local submitBtn = Instance.new("TextButton", verificationWindow)
+submitBtn.Size = UDim2.new(1, -20, 0, 40)
+submitBtn.Position = UDim2.new(0, 10, 0, 120)
+submitBtn.Text = "Verify Key"
+submitBtn.Font = Enum.Font.SourceSansBold
+submitBtn.TextSize = 20
+submitBtn.BackgroundColor3 = Color3.fromRGB(40, 90, 150)
+submitBtn.TextColor3 = Color3.new(1,1,1)
+
+discordBtn.MouseButton1Click:Connect(function()
+    if setclipboard then
+        setclipboard(discordLink)
     end
+    pcall(function()
+        GuiService:OpenBrowserWindow(discordLink)
+    end)
+    discordBtn.Text = "Discord copied & opened!"
+    wait(2)
+    discordBtn.Text = "Get Discord"
 end)
 
-keyBox.FocusLost:Connect(function(enterPressed)
-    if enterPressed then
-        submitButton.MouseButton1Click:Fire()
+-- Меню телепортов (по умолчанию скрыто)
+
+local tpWindow = Instance.new("Frame", screenGui)
+tpWindow.Size = UDim2.new(0, 400, 0, 700)
+tpWindow.Position = UDim2.new(0.25, 0, 0.15, 0)
+tpWindow.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+tpWindow.BorderSizePixel = 0
+tpWindow.Visible = false
+
+local tpTitle = Instance.new("TextLabel", tpWindow)
+tpTitle.Size = UDim2.new(1, 0, 0, 40)
+tpTitle.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+tpTitle.TextColor3 = Color3.new(1,1,1)
+tpTitle.Font = Enum.Font.SourceSansBold
+tpTitle.TextSize = 24
+tpTitle.Text = "Teleport Menu"
+
+local tpToggle = Instance.new("TextButton", tpWindow)
+tpToggle.Size = UDim2.new(0, 30, 0, 30)
+tpToggle.Position = UDim2.new(1, -35, 0, 5)
+tpToggle.BackgroundColor3 = Color3.fromRGB(65, 65, 65)
+tpToggle.TextColor3 = Color3.new(1,1,1)
+tpToggle.Font = Enum.Font.SourceSansBold
+tpToggle.TextSize = 24
+tpToggle.Text = "-"
+
+local tpScroll = Instance.new("ScrollingFrame", tpWindow)
+tpScroll.Size = UDim2.new(1, 0, 1, -40)
+tpScroll.Position = UDim2.new(0, 0, 0, 40)
+tpScroll.BackgroundTransparency = 1
+tpScroll.BorderSizePixel = 0
+tpScroll.ScrollBarThickness = 8
+tpScroll.CanvasSize = UDim2.new(0, 0, 0, 1000)
+tpScroll.AutomaticCanvasSize = Enum.AutomaticSize.Y
+
+-- Список телепортов
+
+local teleports = {
+    {"Weapon in Garage", CFrame.new(-1088.13, 17.7, -219.95, -0.02843, -2.35e-10, -0.9996, -6.87e-08, 1, 1.7e-09, 0.9996, 6.87e-08, -0.02843)},
+    {"Heal Shop", CFrame.new(-898.33, 17.86, -33.25, 0.9507, -8.23e-08, 0.30987, 7.36e-08, 1, 3.96e-08, -0.30987, -1.48e-08, 0.9507)},
+    {"Air Rifle", CFrame.new(-875.69, 17.68, -264.1, 0.29742, 2.11e-08, -0.95474, 2.39e-08, 1, 2.96e-08, 0.95474, -3.16e-08, 0.29742)},
+    {"Karate", CFrame.new(-906.49, 15.29, -209.31, -0.52611, 0.07555, -0.84705, -0.83029, 0.1697, 0.53084, 0.18388, 0.98258, -0.02656)},
+    {"Buy Pickaxe", CFrame.new(-1122.67, 17.46, 730.82, 0.58479, -2.13e-08, 0.81117, 3.15e-08, 1, 3.58e-09, -0.81117, 2.34e-08, 0.58479)},
+    {"Mine 1", CFrame.new(1420.07, 26.87, 772.23, 0.88264, 0.4677, 0.04595, 0.09001, -0.07226, -0.99331, -0.46133, 0.88088, -0.10588)},
+    {"Mine 2", CFrame.new(1419.53, 19.96, 976.61, -0.99676, 0.00762, 0.08002, 0.07888, -0.09927, 0.99192, 0.01550, 0.99503, 0.09835)},
+    {"Sheriff 1", CFrame.new(16.08, 17.8, -26.28, -0.99955, 6.46e-08, -0.02974, 6.29e-08, 1, 5.72e-08, 0.02974, 5.53e-08, -0.99955)},
+    {"Sheriff 2", CFrame.new(72.80, 17.80, -3.64, 0.04083, 4.27e-09, -0.99916, 7.19e-09, 1, 4.56e-09, 0.99916, -7.37e-09, 0.04083)},
+    {"Robbery 1", CFrame.new(39.88, 18.28, 150.62, 0.89550, 1.05e-07, -0.44505, -1.24e-07, 1, -1.47e-08, 0.44505, 6.87e-08, 0.89550)},
+    {"Robbery 2", CFrame.new(226.88, 17.88, 159.62, 0.97739, 1.56e-08, 0.21140, -3.31e-08, 1, 7.93e-08, -0.21140, -8.45e-08, 0.97739)},
+    {"Locked Place", CFrame.new(489.36, 18.13, 297.13, 0.99984, 7.8e-08, -0.01741, -7.84e-08, 1, -2.36e-08, 0.01741, 2.49e-08, 0.99984)},
+    {"Locked Place 2", CFrame.new(424.33, 18.38, 330.97, -1, -3.38e-08, -2.62e-05, -3.38e-08, 1, 5.48e-08, 2.62e-05, 5.48e-08, -1)},
+    {"Robbery 3", CFrame.new(120.28, 18.88, 295.40, 0.96545, 8.08e-08, -0.26058, -7.34e-08, 1, 3.79e-08, 0.26058, -1.75e-08, 0.96545)},
+    {"Beer Fridge", CFrame.new(-559.70, 18.69, 93.38, -0.99745, -3.90e-08, -0.07127, -3.59e-08, 1, -4.47e-08, 0.07127, -4.21e-08, -0.99745)},
+    {"Robbery 4", CFrame.new(-580.98, 17.68, -264.02, -0.86908, -3.72e-09, -0.49466, -8.28e-09, 1, 7.01e-09, 0.49466, 1.01e-08, -0.86908)},
+    {"Sell Items", CFrame.new(-549.51, 17.68, -266.55, 0.96173, 5.54e-08, -0.27398, -5.07e-08, 1, 2.41e-08, 0.27398, -9.33e-09, 0.96173)},
+    {"Bank", CFrame.new(35.66, 18.10, -203.22, 0.99996, -1.38e-08, -0.00871, 1.38e-08, 1, 1.94e-09, 0.00871, -2.06e-09, 0.99996)},
+    {"Robbery 5", CFrame.new(-834.76, 17.68, -263.74, -0.90325, -5.10e-08, 0.42910, 4.16e-09, 1, 1.27e-07, -0.42910, 1.17e-07, -0.90325)},
+}
+
+-- Добавляем кнопки телепорта
+
+local padding = 10
+local btnHeight = 35
+local yPos = 0
+for i, data in ipairs(teleports) do
+    local tpBtn = Instance.new("TextButton", tpScroll)
+    tpBtn.Size = UDim2.new(1, -padding*2, 0, btnHeight)
+    tpBtn.Position = UDim2.new(0, padding, 0, yPos)
+    tpBtn.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+    tpBtn.TextColor3 = Color3.new(1, 1, 1)
+    tpBtn.Font = Enum.Font.SourceSans
+    tpBtn.TextSize = 18
+    tpBtn.Text = data[1]
+
+    tpBtn.MouseButton1Click:Connect(function()
+        local character = player.Character or player.CharacterAdded:Wait()
+        local hrp = character:FindFirstChild("HumanoidRootPart")
+        if hrp then
+            hrp.CFrame = data[2]
+        end
+    end)
+
+    yPos = yPos + btnHeight + padding
+end
+
+tpScroll.CanvasSize = UDim2.new(0, 0, 0, yPos+padding)
+
+-- Кнопка сворачивания меню телепортов
+
+local tpCollapsed = false
+tpToggle.MouseButton1Click:Connect(function()
+    if tpCollapsed then
+        tpScroll.Visible = true
+        tpWindow.Size = UDim2.new(0, 400, 0, 700)
+        tpToggle.Text = "-"
+    else
+        tpScroll.Visible = false
+        tpWindow.Size = UDim2.new(0, 400, 0, 40)
+        tpToggle.Text = "+"
+    end
+    tpCollapsed = not tpCollapsed
+end)
+
+makeDraggable(tpWindow)
+makeDraggable(verificationWindow)
+
+-- Функция открытия меню телепортов и скрытия окна верификации
+
+local function openTPMenu()
+    verificationWindow.Visible = false
+    tpWindow.Visible = true
+end
+
+-- Обработка нажатия кнопки верификации
+
+submitBtn.MouseButton1Click:Connect(function()
+    local enteredKey = inputBox.Text:lower():gsub("%s+", "")
+    if enteredKey == correctKey then
+        openTPMenu()
+    else
+        errorLabel.Text = "Invalid key! Please try again or get Discord."
     end
 end)
