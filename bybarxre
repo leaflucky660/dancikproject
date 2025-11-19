@@ -1,3 +1,9 @@
+
+
+-- dancik project teleport script for Xeno with key verification and Discord link
+-- Key = "dan22!*"
+-- Menu size 600x600, draggable, with + (open) and - (close) buttons
+
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer
 
