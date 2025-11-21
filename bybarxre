@@ -9,7 +9,7 @@ local UserInputService = game:GetService("UserInputService")
 local GuiService = game:GetService("GuiService")
 local player = Players.LocalPlayer
 
-local discordLink = "https://discord.gg/SFc8fD2EeV"
+local discordLink = "https://discord.gg/EXm9eJYYNK"
 local correctKey = "dan22ncik"
 
 -- Функция создания перетаскивания
