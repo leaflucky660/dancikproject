@@ -2,7 +2,7 @@
 
 -- Скрипт Roblox с верификацией ключа, меню телепортов и кнопкой дискорда
 -- Ключ: dan22ncik
--- Дискорд: https://discord.gg/SFc8fD2EeV
+-- Дискорд: https://discord.gg/EXm9eJYYNK
 
 local Players = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
